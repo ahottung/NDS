@@ -1,0 +1,80 @@
+# config.yaml
+
+
+env_params:
+  problem: "vrptw"
+  problem_size: 500
+  num_nodes_to_remove: 15
+  iterations_per_instance: 100
+  recreate_n: 5
+  beta: 0
+  insert_in_new_tours_only: True
+  num_processes: 8  # Number of cpu cores to use for parallel instance repair
+  generator_params:
+    use_X_generator: True
+    rootPos: 2
+    custPos: 2
+    demandType: 2
+    avgRouteSize: 3
+    service_window: 1800
+    time_window_size: 400
+    service_duration: 50
+  starting_solution_params:
+    nb_iterations: 100        # Number of improvement iterations
+    nb_nodes_ratio: 0.25     # Ratio randomly selected nodes for removal
+
+model_params:
+  problem: "${env_params.problem}"
+  embedding_dim: 128
+  poly_embedding_dim: 256
+  sqrt_embedding_dim: 11.3137  # 128**(1/2)
+  encoder_layer_num: 2
+  tour_layer: True
+  message_passing_layer_num: 1
+  encoder_layer_num_2: 2
+  qkv_dim: 16
+  head_num: 8
+  logit_clipping: 10
+  ff_hidden_dim: 512
+  eval_type: 'softmax'
+  z_dim: 10
+
+optimizer_params:
+  optimizer:
+    lr: 1e-4
+    weight_decay: 1e-6
+  scheduler:
+    milestones: [8001, 8051]
+    gamma: 0.1
+
+trainer_params:
+  use_cuda: True
+  cuda_device_num: 0
+  reward_type: "i"
+  epochs: 2000
+  iterations_per_epoch: 150000
+  train_batch_size: 64
+  grad_acc_iterations: "${env_params.iterations_per_instance}"
+  rollout_size: 128
+  nb_skipped_iterations: 10
+  prev_model_path: None
+  model_save_interval: 50
+  model_load:
+    enable: False
+    path: null
+    epoch: null
+  valid_episodes: 1000 # Number of instances used during validation
+  valid_iterations: 50
+  valid_batch_size: 50
+  valid_rollout_size: 100
+  valid_augmentation_enable: True
+  valid_aug_factor: 8
+  valid_data_load:
+    enable: True
+    filename: 'data/vrptw/vrptw500_valid_seed1233_2_2_2_3_1800_400_50.pt'
+
+logger_params:
+  desc: 'train_vrptw_500'
+  wandb:
+    enable: True
+    project: NDS

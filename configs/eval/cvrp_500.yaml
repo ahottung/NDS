@@ -1,0 +1,40 @@
+# config.yaml
+
+
+env_params:
+  problem: "cvrp"
+  problem_size: 500
+  num_nodes_to_remove: 15  # Only relevant if use_baseline_destroy is set to true
+  recreate_n: 5
+  beta: 0
+  insert_in_new_tours_only: True
+  generator_params: null
+  starting_solution_params:
+    nb_iterations: 100        # Number of improvement iterations
+    nb_nodes_ratio: 0.25     # Ratio randomly selected nodes for removal
+
+tester_params:
+  use_cuda: True
+  cuda_device_num: 0
+  SA_delta: 15
+  SA_start_T: 0.1
+  SA_final_T: 0.001
+  softmax_temp: 1.0
+  model_load:
+    - path: "models/cvrp_500"
+      epoch: 2000
+      node_to_remove: 15
+  use_baseline_destroy: False
+  nb_instances: null  # null means use all instances in dataset
+  nb_iterations: 100_000
+  max_runtime: 60
+  rollout_size: 200
+  aug_factor: 8
+  test_data_load:
+    enable: true
+    use_pkl_file: true
+    filename: "data/cvrp/vrp500_test_luo.pkl"
+
+logger_params:
+  desc: "eval_cvrp_500"
+
